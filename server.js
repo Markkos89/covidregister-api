@@ -12,8 +12,7 @@ const instantMongoCrud = require('express-mongo-crud'); // require the module
 
 // mongoose.connect(process.env.DB_HOST, { useMongoClient: true });
 const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://marcos:covidregister@cluster0.owed7.mongodb.net/covidregister?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true });
+const client = new MongoClient(process.env.DB_HOST, { useNewUrlParser: true });
 client.connect(err => {
   if(err) console.log(err)
   console.log("Connected to MongoDB")
