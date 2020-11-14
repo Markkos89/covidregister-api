@@ -1,17 +1,18 @@
-var express = require('express');
-var app = express();
-var router = express.Router();
-var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
-var PORT = 3000;
+const express = require('express');
+const app = express();
+require('dotenv').config()
+const router = express.Router();
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const PORT = 3000;
 
 // REQUIRE MIDDLEWARE
-var instantMongoCrud = require('express-mongo-crud'); // require the module
+const instantMongoCrud = require('express-mongo-crud'); // require the module
 
-mongoose.connect('mongodb://database:27017/mongocrud', {useMongoClient: true});
+mongoose.connect(process.env.DB_HOST, { useMongoClient: true });
 
-var options = { //specify options
-    host: `localhost:${PORT}`
+const options = { //specify options
+    host: `localhost:${process.env.PORT}`
 }
 
 //USE AS MIDDLEWARE
@@ -25,6 +26,6 @@ router.get('/', (req, res) => {
 
 app.use(router);
 
-app.listen(PORT, () => {
-    console.log('API started at http://localhost:'+PORT);
+app.listen(process.env.PORT, () => {
+    console.log('API started at http://localhost:'+process.env.PORT);
 });
