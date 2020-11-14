@@ -10,7 +10,14 @@ const PORT = 3000;
 // REQUIRE MIDDLEWARE
 const instantMongoCrud = require('express-mongo-crud'); // require the module
 
-mongoose.connect(process.env.DB_HOST, { useMongoClient: true });
+// mongoose.connect(process.env.DB_HOST, { useMongoClient: true });
+const MongoClient = require('mongodb').MongoClient;
+const uri = "mongodb+srv://marcos:covidregister@cluster0.owed7.mongodb.net/covidregister?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true });
+client.connect(err => {
+  if(err) console.log(err)
+  console.log("Connected to MongoDB")
+});
 
 const options = { //specify options
     host: `localhost:${process.env.PORT}`
@@ -29,5 +36,8 @@ router.get('/', (req, res) => {
 app.use(router);
 
 app.listen(process.env.PORT, () => {
+    console.log('*****************************************************');
     console.log('API started at http://localhost:'+process.env.PORT);
+    console.log('Swagger UI availaible at http://localhost:3000/apidoc');
+    console.log('*****************************************************');
 });
