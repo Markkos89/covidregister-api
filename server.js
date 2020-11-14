@@ -4,6 +4,7 @@ require('dotenv').config()
 const router = express.Router();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const morgan = require('morgan');
 const PORT = 3000;
 
 // REQUIRE MIDDLEWARE
@@ -16,6 +17,7 @@ const options = { //specify options
 }
 
 //USE AS MIDDLEWARE
+app.use(morgan('dev'))
 app.use(bodyParser.json()); // add body parser
 app.use(instantMongoCrud(options)); // use as middleware
 
