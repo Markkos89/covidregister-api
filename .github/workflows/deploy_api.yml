@@ -7,8 +7,8 @@ on:
       - hotfix/ci*
       - ci/*
 
-    paths: 
-      - "packages/api/*"
+    # paths: 
+    #   - "packages/api/*"
     paths-ignore: # Don't trigger on files that are updated by the CI
       - "*.md"
 defaults:
