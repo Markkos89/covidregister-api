@@ -1,0 +1,80 @@
+name: Deploy API to E Beanstalk
+
+on:
+  push:
+    branches:
+      - master
+      - hotfix/ci*
+      - ci/*
+
+    paths: 
+      - "packages/api/*"
+    paths-ignore: # Don't trigger on files that are updated by the CI
+      - "*.md"
+defaults:
+  run:
+    working-directory: ./packages/api
+    
+jobs:
+  build:
+    name: Build Api
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup Node
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: 'lts'
+
+      - name: Create dist
+        run: |
+          # Install nest global
+          npm install -g @nestjs/cli
+          # Instal prod dependencies
+          npm install
+          # Pre build
+          npm run prebuild
+          # Build
+          npm run build
+      - name: Create zip dist
+        uses: montudor/action-zip@v0.1.0
+        with:
+          args: zip -qq -r ./deploy.zip ./dist package.json package-lock.json ormconfig.js ./.elasticbeanstalk ./.ebextensions
+
+      - name: Artifact zip dist
+        uses: actions/upload-artifact@v2
+        with:
+          name: deploy
+          path: deploy.zip
+
+  deploy:
+    name: Deploy Beanstalk
+
+    runs-on: ubuntu-latest
+
+    needs: build
+
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: deploy
+
+      - name: Create zip dist
+        uses: montudor/action-zip@v0.1.0
+        with:
+          args: unzip -qq deploy.zip
+
+      - name: Delete zip file
+        run: |
+          rm deploy.zip
+      - name: Deploy
+        uses: hmanzur/actions-aws-eb@v1.0.0
+        with:
+          command: 'deploy dashinejos'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: "us-east-1"
