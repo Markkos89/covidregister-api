@@ -1,7 +1,7 @@
 {
     "apps" : [{
-      "name"        : "myapp",
-      "script"      : "app.js",
+      "name"        : "covidregister",
+      "script"      : "server.js",
       "args"        : [],
       "log_date_format" : "YYYY-MM-DD HH:mm Z",
       "watch"       : false,
@@ -11,7 +11,7 @@
       "exec_mode"  : "cluster",
       "instances": "1",
       "env": {
-          "NODE_ENV": "local"
+          "NODE_ENV": "production"
       }
     }]
 }
